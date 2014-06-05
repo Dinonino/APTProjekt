@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TestDBTarModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="TestDBTarModelStoreContainer">
+          <EntitySet Name="Followers" EntityType="TestDBTarModel.Store.Followers" store:Type="Tables" />
+          <EntitySet Name="Words" EntityType="TestDBTarModel.Store.Words" store:Type="Tables" />
+          <AssociationSet Name="first_word_fk" Association="TestDBTarModel.Store.first_word_fk">
+            <End Role="Words" EntitySet="Words" />
+            <End Role="Followers" EntitySet="Followers" />
+          </AssociationSet>
+          <AssociationSet Name="second_word_fk" Association="TestDBTarModel.Store.second_word_fk">
+            <End Role="Words" EntitySet="Words" />
+            <End Role="Followers" EntitySet="Followers" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Followers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="first" Type="bigint" />
+          <Property Name="second" Type="bigint" />
+          <Property Name="num_occurrences" Type="int" />
+        </EntityType>
+        <EntityType Name="Words">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="word_string" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="num_occurrences" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="first_word_fk">
+          <End Role="Words" Type="TestDBTarModel.Store.Words" Multiplicity="0..1" />
+          <End Role="Followers" Type="TestDBTarModel.Store.Followers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Words">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Followers">
+              <PropertyRef Name="first" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="second_word_fk">
+          <End Role="Words" Type="TestDBTarModel.Store.Words" Multiplicity="0..1" />
+          <End Role="Followers" Type="TestDBTarModel.Store.Followers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Words">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Followers">
+              <PropertyRef Name="second" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TestDBTarModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TestDBTarEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Followers" EntityType="TestDBTarModel.Followers" />
+          <EntitySet Name="Words" EntityType="TestDBTarModel.Words" />
+          <AssociationSet Name="first_word_fk" Association="TestDBTarModel.first_word_fk">
+            <End Role="Words" EntitySet="Words" />
+            <End Role="Followers" EntitySet="Followers" />
+          </AssociationSet>
+          <AssociationSet Name="second_word_fk" Association="TestDBTarModel.second_word_fk">
+            <End Role="Words" EntitySet="Words" />
+            <End Role="Followers" EntitySet="Followers" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Followers">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="first" Type="Int64" />
+          <Property Name="second" Type="Int64" />
+          <Property Name="num_occurrences" Type="Int32" />
+          <NavigationProperty Name="Words" Relationship="TestDBTarModel.first_word_fk" FromRole="Followers" ToRole="Words" />
+          <NavigationProperty Name="Words1" Relationship="TestDBTarModel.second_word_fk" FromRole="Followers" ToRole="Words" />
+        </EntityType>
+        <EntityType Name="Words">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="word_string" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="num_occurrences" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Followers" Relationship="TestDBTarModel.first_word_fk" FromRole="Words" ToRole="Followers" />
+          <NavigationProperty Name="Followers1" Relationship="TestDBTarModel.second_word_fk" FromRole="Words" ToRole="Followers" />
+        </EntityType>
+        <Association Name="first_word_fk">
+          <End Type="TestDBTarModel.Words" Role="Words" Multiplicity="0..1" />
+          <End Type="TestDBTarModel.Followers" Role="Followers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Words">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Followers">
+              <PropertyRef Name="first" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="second_word_fk">
+          <End Type="TestDBTarModel.Words" Role="Words" Multiplicity="0..1" />
+          <End Type="TestDBTarModel.Followers" Role="Followers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Words">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Followers">
+              <PropertyRef Name="second" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TestDBTarModelStoreContainer" CdmEntityContainer="TestDBTarEntities">
+          <EntitySetMapping Name="Followers">
+            <EntityTypeMapping TypeName="TestDBTarModel.Followers">
+              <MappingFragment StoreEntitySet="Followers">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="first" ColumnName="first" />
+                <ScalarProperty Name="second" ColumnName="second" />
+                <ScalarProperty Name="num_occurrences" ColumnName="num_occurrences" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Words">
+            <EntityTypeMapping TypeName="TestDBTarModel.Words">
+              <MappingFragment StoreEntitySet="Words">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="word_string" ColumnName="word_string" />
+                <ScalarProperty Name="num_occurrences" ColumnName="num_occurrences" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

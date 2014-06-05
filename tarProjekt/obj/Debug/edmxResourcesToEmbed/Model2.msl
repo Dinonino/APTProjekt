@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TestDBTarModelStoreContainer" CdmEntityContainer="TestDBTarEntities">
+    <EntitySetMapping Name="Followers">
+      <EntityTypeMapping TypeName="TestDBTarModel.Followers">
+        <MappingFragment StoreEntitySet="Followers">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="first" ColumnName="first" />
+          <ScalarProperty Name="second" ColumnName="second" />
+          <ScalarProperty Name="num_occurrences" ColumnName="num_occurrences" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Words">
+      <EntityTypeMapping TypeName="TestDBTarModel.Words">
+        <MappingFragment StoreEntitySet="Words">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="word_string" ColumnName="word_string" />
+          <ScalarProperty Name="num_occurrences" ColumnName="num_occurrences" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

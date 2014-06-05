@@ -1,0 +1,12 @@
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\bin\Release\tarProjekt.exe.config
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\bin\Release\tarProjekt.exe
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\bin\Release\tarProjekt.pdb
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\bin\Release\Newtonsoft.Json.dll
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\bin\Release\Newtonsoft.Json.xml
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Release\TarProjekt.LoadCorpusForm.resources
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Release\TarProjekt.PredictiveTyperForm.resources
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Release\TarProjekt.Properties.Resources.resources
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Release\tarProjekt.csproj.GenerateResource.Cache
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Release\tarProjekt.exe
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Release\tarProjekt.pdb
+C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Release\tarProjekt.csprojResolveAssemblyReference.cache

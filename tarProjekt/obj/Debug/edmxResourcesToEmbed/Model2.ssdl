@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TestDBTarModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="TestDBTarModelStoreContainer">
+    <EntitySet Name="Followers" EntityType="TestDBTarModel.Store.Followers" store:Type="Tables" />
+    <EntitySet Name="Words" EntityType="TestDBTarModel.Store.Words" store:Type="Tables" />
+    <AssociationSet Name="first_word_fk" Association="TestDBTarModel.Store.first_word_fk">
+      <End Role="Words" EntitySet="Words" />
+      <End Role="Followers" EntitySet="Followers" />
+    </AssociationSet>
+    <AssociationSet Name="second_word_fk" Association="TestDBTarModel.Store.second_word_fk">
+      <End Role="Words" EntitySet="Words" />
+      <End Role="Followers" EntitySet="Followers" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Followers">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="first" Type="bigint" />
+    <Property Name="second" Type="bigint" />
+    <Property Name="num_occurrences" Type="int" />
+  </EntityType>
+  <EntityType Name="Words">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="word_string" Type="nvarchar" Nullable="false" MaxLength="100" />
+    <Property Name="num_occurrences" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="first_word_fk">
+    <End Role="Words" Type="TestDBTarModel.Store.Words" Multiplicity="0..1" />
+    <End Role="Followers" Type="TestDBTarModel.Store.Followers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Words">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Followers">
+        <PropertyRef Name="first" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="second_word_fk">
+    <End Role="Words" Type="TestDBTarModel.Store.Words" Multiplicity="0..1" />
+    <End Role="Followers" Type="TestDBTarModel.Store.Followers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Words">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Followers">
+        <PropertyRef Name="second" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

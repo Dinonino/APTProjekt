@@ -55,7 +55,8 @@ namespace TarProjekt
                 {
                     part.Add(OpenFile(file));
                     i++;
-                }                 
+                }
+            bm.Run(part, i / partSize);
             MessageBox.Show("Gotovo je");
                       
         }
@@ -81,10 +82,21 @@ namespace TarProjekt
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                List<string> files = Directory.GetFiles(folderBrowserDialog1.SelectedPath,"*.txt" ,SearchOption.AllDirectories).ToList();
+                List<string> files = Directory.GetFiles(folderBrowserDialog1.SelectedPath, "*.txt", SearchOption.AllDirectories).ToList();
                 textBox1.Text = String.Join(Environment.NewLine, files);
-                    
+
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            new Form2().ShowDialog();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

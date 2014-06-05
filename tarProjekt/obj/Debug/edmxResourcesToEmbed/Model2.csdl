@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TestDBTarModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="TestDBTarEntities" p1:LazyLoadingEnabled="true">
+    <EntitySet Name="Followers" EntityType="TestDBTarModel.Followers" />
+    <EntitySet Name="Words" EntityType="TestDBTarModel.Words" />
+    <AssociationSet Name="first_word_fk" Association="TestDBTarModel.first_word_fk">
+      <End Role="Words" EntitySet="Words" />
+      <End Role="Followers" EntitySet="Followers" />
+    </AssociationSet>
+    <AssociationSet Name="second_word_fk" Association="TestDBTarModel.second_word_fk">
+      <End Role="Words" EntitySet="Words" />
+      <End Role="Followers" EntitySet="Followers" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Followers">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="first" Type="Int64" />
+    <Property Name="second" Type="Int64" />
+    <Property Name="num_occurrences" Type="Int32" />
+    <NavigationProperty Name="Words" Relationship="TestDBTarModel.first_word_fk" FromRole="Followers" ToRole="Words" />
+    <NavigationProperty Name="Words1" Relationship="TestDBTarModel.second_word_fk" FromRole="Followers" ToRole="Words" />
+  </EntityType>
+  <EntityType Name="Words">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+    <Property Name="word_string" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+    <Property Name="num_occurrences" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Followers" Relationship="TestDBTarModel.first_word_fk" FromRole="Words" ToRole="Followers" />
+    <NavigationProperty Name="Followers1" Relationship="TestDBTarModel.second_word_fk" FromRole="Words" ToRole="Followers" />
+  </EntityType>
+  <Association Name="first_word_fk">
+    <End Type="TestDBTarModel.Words" Role="Words" Multiplicity="0..1" />
+    <End Type="TestDBTarModel.Followers" Role="Followers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Words">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Followers">
+        <PropertyRef Name="first" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="second_word_fk">
+    <End Type="TestDBTarModel.Words" Role="Words" Multiplicity="0..1" />
+    <End Type="TestDBTarModel.Followers" Role="Followers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Words">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="Followers">
+        <PropertyRef Name="second" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

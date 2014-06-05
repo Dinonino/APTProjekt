@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,7 +30,14 @@ namespace TarProjekt
             for (int i = 0; i < input.Length; i++)
             {
                 char c = input[i];
-                if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z')
+                if (c == '\'' && (i+1)< input.Length && !char.IsLetter(input[i+1]))
+                        ;
+                else if ( c == '\'')
+                {
+                    sb.Append(Char.ToLower(input[i]));
+                    lastWasASpace = false;
+                }
+                else if(c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z')
                 {
                     sb.Append(Char.ToLower(input[i]));
                     lastWasASpace = false;
@@ -84,44 +93,16 @@ namespace TarProjekt
             List<string> sentences = SeperateSentences(input);
             List<List<string>> tokensPerSentence = new List<List<string>>();
             foreach (string sentence in sentences)
-                tokensPerSentence.Add(Tokenize(RemoveExcessAndLowercase(sentence)));  
-            WriteToFile(CreateBigrams(tokensPerSentence), part);
-
+                tokensPerSentence.Add(Tokenize(RemoveExcessAndLowercase(sentence)));
+            //DBC dbc = new DBC();
+            //dbc.SaveToDB(CreateBigrams(tokensPerSentence));
+            //WriteToFile(CreateBigrams(tokensPerSentence), part);
+            WordPredicter wp = new WordPredicter(CreateBigrams(tokensPerSentence));
+            SharedClass.wp = wp;
 
         }
 
-        class Ocurrences
-        {
-            int numberOfOccurrences = 0;
-            Dictionary<string, int> followers = new Dictionary<string, int>();
-            public Ocurrences()
-            {
-                numberOfOccurrences = 1;
-            }
 
-            public void AddFollower(string follower)
-            {
-                if (followers.ContainsKey(follower))
-                    followers[follower]++;
-                else
-                    followers[follower] = 1;
-            }
-
-            public void increaseCount()
-            {
-                numberOfOccurrences++;
-            }
-
-            public int GetNumberOfOccurrences()
-            {
-                return numberOfOccurrences;
-            }
-
-            public Dictionary<string, int> GetFollowers()
-            {
-                return followers;
-            }
-        }
 
 
         private void WriteToFile(Dictionary<string, Ocurrences> bigrams,int part)
@@ -138,6 +119,8 @@ namespace TarProjekt
             }           
             file.Close();
         }
+
+
 
         
       

@@ -32,10 +32,12 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openAllFilesInFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.openAllFilesInFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -70,6 +72,13 @@
             this.openFileToolStripMenuItem.Text = "OpenFile";
             this.openFileToolStripMenuItem.Click += new System.EventHandler(this.openFileToolStripMenuItem_Click);
             // 
+            // openAllFilesInFolderToolStripMenuItem
+            // 
+            this.openAllFilesInFolderToolStripMenuItem.Name = "openAllFilesInFolderToolStripMenuItem";
+            this.openAllFilesInFolderToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.openAllFilesInFolderToolStripMenuItem.Text = "OpenAllFilesInFolder";
+            this.openAllFilesInFolderToolStripMenuItem.Click += new System.EventHandler(this.openAllFilesInFolderToolStripMenuItem_Click);
+            // 
             // textBox1
             // 
             this.textBox1.Location = new System.Drawing.Point(38, 56);
@@ -89,18 +98,33 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // openAllFilesInFolderToolStripMenuItem
+            // button2
             // 
-            this.openAllFilesInFolderToolStripMenuItem.Name = "openAllFilesInFolderToolStripMenuItem";
-            this.openAllFilesInFolderToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
-            this.openAllFilesInFolderToolStripMenuItem.Text = "OpenAllFilesInFolder";
-            this.openAllFilesInFolderToolStripMenuItem.Click += new System.EventHandler(this.openAllFilesInFolderToolStripMenuItem_Click);
+            this.button2.Location = new System.Drawing.Point(411, 508);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(166, 23);
+            this.button2.TabIndex = 3;
+            this.button2.Text = "Otvori drugu formu";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(185, 28);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 4;
+            this.button3.Text = "button3";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(615, 543);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.menuStrip1);
@@ -124,6 +148,8 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.ToolStripMenuItem openAllFilesInFolderToolStripMenuItem;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
 
     }
 }
