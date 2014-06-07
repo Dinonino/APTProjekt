@@ -52,17 +52,22 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.autoCompleteList = new System.Windows.Forms.ListBox();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabelLine = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusLabelColumn = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusLastWord = new System.Windows.Forms.ToolStripStatusLabel();
+            this.brojRjeci = new System.Windows.Forms.ToolStripStatusLabel();
+            this.averageSentenceLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.numberOfSentencesLab = new System.Windows.Forms.ToolStripStatusLabel();
             this.fontDialog = new System.Windows.Forms.FontDialog();
             this.loadCorpusDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
-            this.brojRjeci = new System.Windows.Forms.ToolStripStatusLabel();
+            this.listAddOne = new System.Windows.Forms.ListBox();
+            this.crossentropyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.loadTestSetDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // fileText
@@ -176,7 +181,7 @@
             // fontToolStripMenuItem
             // 
             this.fontToolStripMenuItem.Name = "fontToolStripMenuItem";
-            this.fontToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.fontToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.fontToolStripMenuItem.Text = "Font";
             this.fontToolStripMenuItem.Click += new System.EventHandler(this.fontToolStripMenuItem_Click);
             // 
@@ -213,6 +218,8 @@
             // 
             // analysisToolStripMenuItem
             // 
+            this.analysisToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.crossentropyToolStripMenuItem});
             this.analysisToolStripMenuItem.Name = "analysisToolStripMenuItem";
             this.analysisToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.analysisToolStripMenuItem.Text = "Analysis";
@@ -249,18 +256,20 @@
             this.autoCompleteList.TabIndex = 6;
             this.autoCompleteList.Visible = false;
             // 
-            // statusStrip1
+            // statusStrip
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabelLine,
             this.statusLabelColumn,
             this.statusLastWord,
-            this.brojRjeci});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 363);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(658, 22);
-            this.statusStrip1.TabIndex = 8;
-            this.statusStrip1.Text = "Line: 0";
+            this.brojRjeci,
+            this.averageSentenceLabel,
+            this.numberOfSentencesLab});
+            this.statusStrip.Location = new System.Drawing.Point(0, 363);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(658, 22);
+            this.statusStrip.TabIndex = 8;
+            this.statusStrip.Text = "Line: 0";
             // 
             // statusLabelLine
             // 
@@ -279,6 +288,24 @@
             this.statusLastWord.Name = "statusLastWord";
             this.statusLastWord.Size = new System.Drawing.Size(0, 17);
             // 
+            // brojRjeci
+            // 
+            this.brojRjeci.Name = "brojRjeci";
+            this.brojRjeci.Size = new System.Drawing.Size(118, 17);
+            this.brojRjeci.Text = "toolStripStatusLabel1";
+            // 
+            // averageSentenceLabel
+            // 
+            this.averageSentenceLabel.Name = "averageSentenceLabel";
+            this.averageSentenceLabel.Size = new System.Drawing.Size(149, 17);
+            this.averageSentenceLabel.Text = "Average sentence length: 0";
+            // 
+            // numberOfSentencesLab
+            // 
+            this.numberOfSentencesLab.Name = "numberOfSentencesLab";
+            this.numberOfSentencesLab.Size = new System.Drawing.Size(132, 17);
+            this.numberOfSentencesLab.Text = "Number of sentences: 0";
+            // 
             // loadCorpusDialog
             // 
             this.loadCorpusDialog.FileName = "openFileDialog1";
@@ -287,18 +314,32 @@
             // 
             this.openFileDialog.FileName = "openFileDialog1";
             // 
-            // brojRjeci
+            // listAddOne
             // 
-            this.brojRjeci.Name = "brojRjeci";
-            this.brojRjeci.Size = new System.Drawing.Size(118, 17);
-            this.brojRjeci.Text = "toolStripStatusLabel1";
+            this.listAddOne.FormattingEnabled = true;
+            this.listAddOne.Location = new System.Drawing.Point(389, 192);
+            this.listAddOne.Name = "listAddOne";
+            this.listAddOne.Size = new System.Drawing.Size(189, 95);
+            this.listAddOne.TabIndex = 9;
+            // 
+            // crossentropyToolStripMenuItem
+            // 
+            this.crossentropyToolStripMenuItem.Name = "crossentropyToolStripMenuItem";
+            this.crossentropyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.crossentropyToolStripMenuItem.Text = "Cross-entropy";
+            this.crossentropyToolStripMenuItem.Click += new System.EventHandler(this.crossentropyToolStripMenuItem_Click);
+            // 
+            // loadTestSetDialog
+            // 
+            this.loadTestSetDialog.FileName = "openFileDialog1";
             // 
             // PredictiveTyperForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(658, 385);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.listAddOne);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.autoCompleteList);
             this.Controls.Add(this.fileText);
             this.Controls.Add(this.menuStrip1);
@@ -308,8 +349,8 @@
             this.Text = "Predictive Typer";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -326,7 +367,7 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ListBox autoCompleteList;
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
@@ -349,5 +390,10 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.ToolStripStatusLabel brojRjeci;
+        private System.Windows.Forms.ListBox listAddOne;
+        private System.Windows.Forms.ToolStripStatusLabel averageSentenceLabel;
+        private System.Windows.Forms.ToolStripStatusLabel numberOfSentencesLab;
+        private System.Windows.Forms.ToolStripMenuItem crossentropyToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog loadTestSetDialog;
     }
 }

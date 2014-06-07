@@ -10,6 +10,10 @@ using System.Threading.Tasks;
 
 namespace TarProjekt
 {
+    public enum Smoot
+    {
+        KNESER_NEY_SMOOTH, ADAPTIVE_SMOOTH, GOOD_TURING_SMOOTH
+    }
     public class LanguageModel
     {
         private Dictionary<string, Word> nGrams;
@@ -18,7 +22,15 @@ namespace TarProjekt
         private int totalNumberOfWords;
         private long totalNumberOfDiferentBigrams; //potrebno za Kneser Ney metodu
         private int LMOrder;
+        private int numberOfSentences;
+
+        private float averageSentenceLength;
         private static float KNESER_NEY_SMOOTING_DISCOUNT = 0.75f;
+        public int NumberOfSentences
+        {
+             get { return numberOfSentences; }
+             set { numberOfSentences = value; }
+        }
         public int TotalNumberOfWords
         {
             get
@@ -28,6 +40,17 @@ namespace TarProjekt
             set
             {
                 totalNumberOfWords = value;
+            }
+        }
+        public float AverageSentenceLenght
+        {
+            get
+            {
+                return averageSentenceLength;
+            }
+            set
+            {
+                averageSentenceLength = value;
             }
         }
         public LanguageModel(int LMOrder)
@@ -40,59 +63,21 @@ namespace TarProjekt
         }
         public void run(string input)
         {
-            List<string> sentences = SeperateSentences(input);
-            List<List<string>> content = new List<List<string>>();
-            foreach(string sentence in sentences)
-            {
-                content.Add(Tokenize(RemoveExcessAndLowercase(sentence)));
-            }
+            InputFormatter inputFormatter = new InputFormatter();
+            List<List<string>> content = inputFormatter.FormatData(input);
             createModel(content);
         }
-
-        private List<string> SeperateSentences(string input)
+        public List<string> evaluateModel()
         {
-            List<string> output = new List<string>();
-            output.AddRange(input.Split('.').ToList());
-            return output;
+            return new List<string>();
         }
         public int getLMOrder()
         {
             return LMOrder;
         }
-        private string RemoveExcessAndLowercase(string input)
-        {
-            StringBuilder sb = new StringBuilder(input.Length);
-            bool lastWasASpace = false;
-            for (int i = 0; i < input.Length; i++)
-            {
-                char c = input[i];
-                if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z')
-                {
-                    sb.Append(Char.ToLower(input[i]));
-                    lastWasASpace = false;
-                }
-                else
-                {
-                    if (!lastWasASpace)
-                        sb.Append(' ');
-                    lastWasASpace = true;
-                }
-
-            }
-
-            return sb.ToString();
-        }
-
-        private List<string> Tokenize(string input)
-        {
-            List<string> output = new List<string>();
-            output = input.Split(' ').ToList();
-            output = output.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
-            return output;
-        }
+        
         private void createModel(List<List<string>> input)
         {
-
             foreach (List<string> sentence in input)
             {
                 for (int i = 0; i < sentence.Count; i++)
@@ -132,7 +117,10 @@ namespace TarProjekt
                         forUpdate = forUpdate[wordToInsert].FollowersInLanguageModel;
                     }
                 }
+
             }
+            averageSentenceLength = (float)totalNumberOfWords / input.Count; 
+            numberOfSentences = input.Count;
             WriteToFile();
         }
         private void setTotalNumberOfDifferentBigrams()
@@ -192,6 +180,42 @@ namespace TarProjekt
             result = result.OrderByDescending(x => x.EvaluatedProbability).ToList();
             return result;
         }
+        //Add one smooting
+        public List<Word> addOneSmooting(List<string> words)
+        {
+            List<Word> result = new List<Word>();
+            string firstWordFromNgram = words.ElementAt(0);
+            try
+            {
+                Word word = nGrams[firstWordFromNgram];
+
+                Dictionary<string, Word> forProcessing = nGrams[firstWordFromNgram].FollowersInLanguageModel;
+                for(int i = 1; i < LMOrder - 1; i++)
+                {
+                    string nextWord = words.ElementAt(i);
+                    Word wordFromNgram = forProcessing[nextWord];
+
+                    //word 
+                    word = wordFromNgram; //pamcenje prijasnje rijeci
+                    forProcessing = word.FollowersInLanguageModel;
+                }
+                //tu prebrojim broj rjeci s kojima se ne tvori nGram(redna n - 1)
+                //u biti od ukupno broja rjeci oduzmemo broj nGrama(reda n) koji tvori n - 1 gram
+                //svakome tome koji ne postoji morat ce se dodat 1
+                //i tako V puta
+                foreach(Word w in forProcessing.Values)
+                {
+                    double evaluatedProbability = (double)(w.NumberOfOccurences + 1) / (word.NumberOfOccurences + nGrams.Values.Count);
+                    w.EvaluatedProbability = evaluatedProbability;
+                    result.Add(w);
+                }
+                return result.OrderByDescending(x => x.EvaluatedProbability).ToList();
+            }
+            catch(Exception)
+            {
+                return mostOccuringWords(10).OrderByDescending(x => x.EvaluatedProbability).ToList();
+            }
+        }
         //Good Turing smooting
         public SortedList<float, Word> doGoodTuringSmoot()
         {
@@ -199,7 +223,7 @@ namespace TarProjekt
             return new SortedList<float, Word>();
         }
         //Kenser Ney je rekurzivna metoda smootinga
-        public List<Word> doKneserNeySmoot(List<string> words)
+        public List<Word> doKneserNeySmooth(List<string> words)
         {
             //pronadi ukupan 
             setTotalNumberOfDifferentBigrams();
@@ -208,13 +232,6 @@ namespace TarProjekt
             try
             {
                 Word word = nGrams[firstWordFromNgram];
-
-                //ne postoji n-gram koji sadrzi prvu trazenu rijec
-                //ne mozemo provesti Kneser Ney smoot
-                if (word == null)
-                {
-                    return null;
-                }
 
                 //prva rijec je razlicita, polazi se za provjerom i podesavanjem vjerojatnosti rijeci
                 Dictionary<string, Word> forProcessing = nGrams[firstWordFromNgram].FollowersInLanguageModel;
@@ -227,10 +244,6 @@ namespace TarProjekt
 
                     //ako bilo koja od zadanih rijeci se ne nalazi u n-gramu stupnja n-1 
                     //ne mozemo provesti Kneser Ney smoot
-                    if (wordFromNgram == null)
-                    {
-                        return null;
-                    }
 
                     float knProbabilityOfWord = computeKNProbability(wordFromNgram, word);
 
@@ -251,12 +264,14 @@ namespace TarProjekt
             }
             catch(Exception)
             {
-                List<Word> list = new List<Word>();
-                return mostOccuringWords(5);
+                return mostOccuringWords(5).OrderByDescending(x => x.EvaluatedProbability).ToList();
             }
 
         }
+        private void computePerplexityCrossEntropy(List<List <string>> testSentences)
+        {
 
+        }
         private void WriteToFile()
         {
             StreamWriter file = new StreamWriter("./izlaz.txt");

@@ -14,6 +14,8 @@ namespace TarProjekt
     public partial class PredictiveTyperForm : Form
     {
         private LanguageModel languageModel;
+        private bool corpusLoaded = false;
+
         public LanguageModel Model
         {
             get
@@ -27,7 +29,7 @@ namespace TarProjekt
         }
         public PredictiveTyperForm()
         {
-            languageModel = new LanguageModel(3);
+            languageModel = new LanguageModel(2);
             InitializeComponent();
         }
 
@@ -38,7 +40,34 @@ namespace TarProjekt
             if (words.Count > languageModel.getLMOrder() - 1)
             {
                 List<string> wordsForPrediction = words.GetRange(words.Count - (languageModel.getLMOrder() - 1) - 1, languageModel.getLMOrder() - 1);
-                predictions = languageModel.doKneserNeySmoot(wordsForPrediction);
+                predictions = languageModel.doKneserNeySmooth(wordsForPrediction);
+                double sum = 0;
+                for (int i = 0; i < predictions.Count; i++)
+                {
+                    sum += predictions.ElementAt(i).EvaluatedProbability;
+                }
+                //kneserSum.Text = sum.ToString();
+            }
+            else
+            {
+                predictions = languageModel.mostOccuringWords(10);
+            }
+            List<string> zaVratit = new List<string>();
+            for (int i = 0; i < predictions.Count(); i++)
+            {
+                zaVratit.Add(predictions.ElementAt(i).Content + " " + predictions.ElementAt(i).EvaluatedProbability);
+            }
+            return zaVratit;
+        }
+        private List<string> getBestPredictions2()
+        {
+            List<string> words = fileText.Text.Split(' ').ToList<String>().ConvertAll(d => d.ToLower());
+            List<Word> predictions = null;
+            if (words.Count > languageModel.getLMOrder() - 1)
+            {
+                List<string> wordsForPrediction = words.GetRange(words.Count - (languageModel.getLMOrder() - 1) - 1, languageModel.getLMOrder() - 1);
+                predictions = languageModel.addOneSmooting(wordsForPrediction);
+
             }
             else
             {
@@ -58,8 +87,7 @@ namespace TarProjekt
             while (index >= 0)
             {
                 char lastCharacter = fileText.Text.ElementAt(index);
-                if (lastCharacter == ' ' || lastCharacter == '.' || lastCharacter == ',' //ovo se vjerojanto da i drugacije
-                   || lastCharacter == '!' || lastCharacter == '\n' || lastCharacter == '\t') //zapisat al mi se neda
+                if (!Char.IsLetter(lastCharacter))
                 {
                     break;
                 }
@@ -79,7 +107,7 @@ namespace TarProjekt
             //autoCompleteList.SetSelected(1, true);
             List<string> lista = getBestPredictions();
             List<string> forOutput = new List<string>();
-            for(int i = 0; i < lista.Count(); i++)
+            for (int i = 0; i < lista.Count(); i++)
             {
                 string possibleChoice = lista.ElementAt(i);
                 bool isChoice = true;
@@ -90,7 +118,7 @@ namespace TarProjekt
                     if (possibleChoice.ElementAt(j) != lastUncompletedWord.ElementAt(j))
                         isChoice = false;
                 }
-                if(isChoice)
+                if (isChoice)
                     forOutput.Add(possibleChoice);
             }
             autoCompleteList.DataSource = forOutput;
@@ -100,6 +128,25 @@ namespace TarProjekt
             statusLabelLine.Text = "Line: " + lineNumber.ToString() + ";";
             statusLabelColumn.Text = "Column: " + (selection - firstChar).ToString() + ";";
             statusLastWord.Text = lastUncompletedWord;
+
+            //ovo cu samo uklonut kasnije
+            List<string> lista2 = getBestPredictions2();
+            List<string> forOutput2 = new List<string>();
+            for (int i = 0; i < lista2.Count(); i++)
+            {
+                string possibleChoice = lista2.ElementAt(i);
+                bool isChoice = true;
+                for (int j = 0; j < possibleChoice.Count(); j++)
+                {
+                    if (j == lastUncompletedWord.Count() || j == possibleChoice.Count())
+                        break;
+                    if (possibleChoice.ElementAt(j) != lastUncompletedWord.ElementAt(j))
+                        isChoice = false;
+                }
+                if (isChoice)
+                    forOutput2.Add(possibleChoice);
+            }
+            listAddOne.DataSource = forOutput2;
         }
         private string OpenFile(string filename)
         {
@@ -119,16 +166,19 @@ namespace TarProjekt
         }
         private void loadCorpusToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(loadCorpusDialog.ShowDialog(this) == DialogResult.OK)
+            if (loadCorpusDialog.ShowDialog(this) == DialogResult.OK)
             {
                 //List<string> input = new List<string>();
                 int i = 0;
-                int velicinaModela = 3;
+                int velicinaModela = 2;
                 languageModel = new LanguageModel(velicinaModela);
                 string text = OpenFile(loadCorpusDialog.FileName);
                 languageModel.run(text);
                 brojRjeci.Text = languageModel.TotalNumberOfWords.ToString();
+                averageSentenceLabel.Text = "Average sentence length: " + languageModel.AverageSentenceLenght;
+                numberOfSentencesLab.Text = "Number of sentences: " + languageModel.NumberOfSentences;
                 MessageBox.Show("Corpus loaded!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                corpusLoaded = true;
             }
         }
 
@@ -140,7 +190,7 @@ namespace TarProjekt
 
         private void fontToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(fontDialog.ShowDialog(this) == DialogResult.OK)
+            if (fontDialog.ShowDialog(this) == DialogResult.OK)
             {
 
             }
@@ -148,7 +198,7 @@ namespace TarProjekt
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(saveFileDialog.ShowDialog(this) == DialogResult.OK)
+            if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
             {
 
             }
@@ -162,7 +212,7 @@ namespace TarProjekt
                 {
                     string txt = File.ReadAllText(openFileDialog.FileName);
                     fileText.Text = txt;
-                  
+
                 }
                 catch (Exception)
                 {
@@ -189,9 +239,9 @@ namespace TarProjekt
             }
             else if (e.KeyCode == Keys.Down)
             {
-                e.SuppressKeyPress = true;
                 if (autoCompleteList.Items.Count > 0)
                 {
+                    e.SuppressKeyPress = true;
                     int indeks = autoCompleteList.SelectedIndex;
                     if (indeks + 1 > autoCompleteList.Items.Count - 1)
                     {
@@ -204,13 +254,13 @@ namespace TarProjekt
                     autoCompleteList.SetSelected(indeks, true);
                 }
             }
-            else if(e.KeyCode == Keys.Up)
+            else if (e.KeyCode == Keys.Up)
             {
-                e.SuppressKeyPress = true;
-                if(autoCompleteList.Items.Count > 0)
+                if (autoCompleteList.Items.Count > 0)
                 {
+                    e.SuppressKeyPress = true;
                     int indeks = autoCompleteList.SelectedIndex;
-                    if(indeks == 0)
+                    if (indeks == 0)
                     {
                         indeks = autoCompleteList.Items.Count - 1;
                     }
@@ -221,11 +271,31 @@ namespace TarProjekt
                     autoCompleteList.SetSelected(indeks, true);
                 }
             }
-            else if(e.KeyCode == Keys.Escape)
+            else if (e.KeyCode == Keys.Escape)
             {
                 e.SuppressKeyPress = true;
                 autoCompleteList.DataSource = null;
             }
+        }
+
+        private void crossentropyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (corpusLoaded)
+            {
+                if (loadTestSetDialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    string text = OpenFile(loadTestSetDialog.FileName);
+                    InputFormatter inFormatter = new InputFormatter();
+                    List<List<string>> testSet = inFormatter.FormatData(text);
+                    Analyzer analyzer = new Analyzer(languageModel);
+                    analyzer.CalculateCrossEntropy(testSet);
+                    string outputFolder = "output.txt"; 
+                    MessageBox.Show("Analysis done. Saved in " + outputFolder);
+                }
+            }
+            else
+                MessageBox.Show("Corpus must be loaded first");
+
         }
 
     }
