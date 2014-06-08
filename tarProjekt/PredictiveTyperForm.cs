@@ -191,7 +191,6 @@ namespace TarProjekt
             if (loadCorpusDialog.ShowDialog(this) == DialogResult.OK)
             {
                 //List<string> input = new List<string>();
-                int i = 0;
                 int velicinaModela = 2;
                 languageModel = new LanguageModel(velicinaModela);
                 string text = OpenFile(loadCorpusDialog.FileName);
@@ -316,8 +315,8 @@ namespace TarProjekt
                             sentence.Insert(0, LanguageModel.STARTWORD);
                             sentence.Add( LanguageModel.ENDWORD);
                         }
-                    List<double> entropyValues = new List<double>();
-                    entropyValues.Add(analyzer.CalculateCrossEntropy(testSet));
+                    double[] entropyValues ;
+                    entropyValues=analyzer.CalculateCrossEntropy(testSet);
                     string outputFolder = "output.txt";
                     WriteEntropy(outputFolder, entropyValues);
                     MessageBox.Show("Analysis done. Saved in " + outputFolder);
@@ -328,16 +327,11 @@ namespace TarProjekt
 
         }
 
-        private void WriteEntropy(string fileName, List<double> entropyValues)
+        private void WriteEntropy(string fileName, double[] entropyValues)
         {
             StreamWriter file = new StreamWriter(fileName);
-            int i=1;
-            foreach (double value in entropyValues)
-            {
-                file.Write("N/" + i + " "+ value + System.Environment.NewLine);
-                i *= 2;
-            }
-          
+            file.Write("Knesser-Ney" + " "+ entropyValues[0] + System.Environment.NewLine);
+            file.Write("Add one" + " " + entropyValues[1] + System.Environment.NewLine);          
             file.Close();
         }
 

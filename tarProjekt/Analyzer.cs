@@ -16,22 +16,29 @@ namespace TarProjekt
             this.languageModel = lm;
         }
         
-        public double CalculateCrossEntropy(List<List<String>> testSet)
+        public double[] CalculateCrossEntropy(List<List<String>> testSet)
         {
-            double res = 0;
+            double[] res = {0,0};
+            double[] singularRes;
             double wordCount = 0;
             foreach (List<String> sentence in testSet)
             {
-                res += CalculateProbabilityOfSentence(sentence);
+                singularRes = CalculateProbabilityOfSentence(sentence);
+                res[0]+= singularRes[0];
+                res[1]+= singularRes[1];
                 wordCount += sentence.Count - 2* languageModel.getLMOrder();
             }
-            res = -1 * res / wordCount;
+            res[0] = -1 * res[0] / wordCount;
+            res[1] = -1 * res[1] / wordCount;
             return res;
 
         }
 
-        private double CalculateProbabilityOfSentence(List<String> sentence)
+        private double[] CalculateProbabilityOfSentence(List<String> sentence)
         {
+            double[] result = new double[2];
+
+            #region kneser.ney
             double probabilityInLog2 = 0;
             List<Word> predictions;
             for (int i = 0; i < sentence.Count - 2; i++)
@@ -52,7 +59,33 @@ namespace TarProjekt
                     probabilityInLog2 += TransformToLogFormat(1.0/1000); 
 
             }
-             return probabilityInLog2;
+            result[0]=(probabilityInLog2);
+            #endregion
+
+            #region addOne
+            probabilityInLog2 = 0;
+            predictions = null;
+            for (int i = 0; i < sentence.Count - 2; i++)
+            {
+                List<string> wordsForPrediction = sentence.GetRange(i, languageModel.getLMOrder());
+                predictions = languageModel.addOneSmooting(wordsForPrediction);
+                bool predictionExists = false;
+                Word foundPrediction = null;
+                foreach (Word prediction in predictions)
+                    if (prediction.Content == sentence.ElementAt(i + 2))
+                    {
+                        predictionExists = true;
+                        foundPrediction = prediction;
+                    }
+                if (predictionExists && foundPrediction.EvaluatedProbability > 0)
+                    probabilityInLog2 += TransformToLogFormat(foundPrediction.EvaluatedProbability);
+                else
+                    probabilityInLog2 += TransformToLogFormat(1.0 / 1000);
+
+            }
+            result[1]=(probabilityInLog2);
+            #endregion
+            return result;
         }
 
         private double TransformToLogFormat(double num)
