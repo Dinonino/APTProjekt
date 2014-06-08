@@ -9,23 +9,55 @@ namespace TarProjekt
     class Analyzer
     {
 
-        LanguageModel lm;
+        LanguageModel languageModel;
 
         public Analyzer(LanguageModel lm)
         {
-            this.lm = lm;
+            this.languageModel = lm;
         }
         
-        public void CalculateCrossEntropy(List<List<String>> testSet)
-        { 
-            
+        public double CalculateCrossEntropy(List<List<String>> testSet)
+        {
+            double res = 0;
+            double wordCount = 0;
+            foreach (List<String> sentence in testSet)
+            {
+                res += CalculateProbabilityOfSentence(sentence);
+                wordCount += sentence.Count - 2* languageModel.getLMOrder();
+            }
+            res = -1 * res / wordCount;
+            return res;
+
         }
 
         private double CalculateProbabilityOfSentence(List<String> sentence)
         {
-            double probability = 1;
+            double probabilityInLog2 = 0;
+            List<Word> predictions;
+            for (int i = 0; i < sentence.Count - 2; i++)
+            {
+                List<string> wordsForPrediction = sentence.GetRange(i, languageModel.getLMOrder());
+                predictions = languageModel.doKneserNeySmooth(wordsForPrediction);
+                bool predictionExists = false;
+                Word foundPrediction = null;
+                foreach (Word prediction in predictions)
+                    if (prediction.Content == sentence.ElementAt(i + 2))
+                    {
+                        predictionExists = true;
+                        foundPrediction = prediction;
+                    }
+                if (predictionExists && foundPrediction.EvaluatedProbability > 0)
+                    probabilityInLog2 += TransformToLogFormat(foundPrediction.EvaluatedProbability);
+                else
+                    probabilityInLog2 += TransformToLogFormat(1.0/1000); 
 
-            return probability;
+            }
+             return probabilityInLog2;
+        }
+
+        private double TransformToLogFormat(double num)
+        {
+            return Math.Log(num, 2);
         }
     }
 }

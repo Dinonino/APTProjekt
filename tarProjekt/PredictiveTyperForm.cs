@@ -35,22 +35,44 @@ namespace TarProjekt
 
         private List<string> getBestPredictions()
         {
-            List<string> words = fileText.Text.Split(' ').ToList<String>();
+            List<string> words = fileText.Text.Split('.').Last().Split(' ').ToList<String>();
             List<Word> predictions = null;
-            if (words.Count > languageModel.getLMOrder() - 1)
-            {
-                List<string> wordsForPrediction = words.GetRange(words.Count - (languageModel.getLMOrder() - 1) - 1, languageModel.getLMOrder() - 1);
-                predictions = languageModel.doKneserNeySmooth(wordsForPrediction);
-                double sum = 0;
-                for (int i = 0; i < predictions.Count; i++)
-                {
-                    sum += predictions.ElementAt(i).EvaluatedProbability;
-                }
-                //kneserSum.Text = sum.ToString();
+
+            //
+
+            if (words.Count < languageModel.getLMOrder())
+            { 
+                int missing = languageModel.getLMOrder()  - words.Count + 1;
+                for (int i = 0; i < missing; i++ )
+                    words.Insert(0, LanguageModel.STARTWORD);
             }
-            else
+            List<string> wordsForPrediction = words.GetRange(words.Count - (languageModel.getLMOrder() - 1) - 1, languageModel.getLMOrder() - 1);
+            predictions = languageModel.doKneserNeySmooth(wordsForPrediction);
+            double sum = 0;
+            Word removeStartWord = null;
+            Word removeEndWord = null;
+            foreach (Word prediction in predictions)
+            {
+                if (prediction.Content == LanguageModel.ENDWORD)
+                    removeStartWord = prediction;
+                if (prediction.Content == LanguageModel.STARTWORD)
+                    removeEndWord = prediction;
+            }
+            if (removeStartWord != null)
+                predictions.Remove(removeStartWord);
+            if (removeEndWord != null)
+                predictions.Remove(removeEndWord);
+            for (int i = 0; i < predictions.Count; i++)
+            {
+                sum += predictions.ElementAt(i).EvaluatedProbability;
+            }
+            //kneserSum.Text = sum.ToString();
+
+
+            if (predictions.Count == 0)
             {
                 predictions = languageModel.mostOccuringWords(10);
+                 int i = 2;
             }
             List<string> zaVratit = new List<string>();
             for (int i = 0; i < predictions.Count(); i++)
@@ -195,7 +217,7 @@ namespace TarProjekt
 
             }
         }
-
+        
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (saveFileDialog.ShowDialog(this) == DialogResult.OK)
@@ -288,14 +310,35 @@ namespace TarProjekt
                     InputFormatter inFormatter = new InputFormatter();
                     List<List<string>> testSet = inFormatter.FormatData(text);
                     Analyzer analyzer = new Analyzer(languageModel);
-                    analyzer.CalculateCrossEntropy(testSet);
-                    string outputFolder = "output.txt"; 
+                    foreach (List<string> sentence in testSet)
+                        for (int i = 0; i < languageModel.getLMOrder(); i++ )
+                        {
+                            sentence.Insert(0, LanguageModel.STARTWORD);
+                            sentence.Add( LanguageModel.ENDWORD);
+                        }
+                    List<double> entropyValues = new List<double>();
+                    entropyValues.Add(analyzer.CalculateCrossEntropy(testSet));
+                    string outputFolder = "output.txt";
+                    WriteEntropy(outputFolder, entropyValues);
                     MessageBox.Show("Analysis done. Saved in " + outputFolder);
                 }
             }
             else
                 MessageBox.Show("Corpus must be loaded first");
 
+        }
+
+        private void WriteEntropy(string fileName, List<double> entropyValues)
+        {
+            StreamWriter file = new StreamWriter(fileName);
+            int i=1;
+            foreach (double value in entropyValues)
+            {
+                file.Write("N/" + i + " "+ value + System.Environment.NewLine);
+                i *= 2;
+            }
+          
+            file.Close();
         }
 
     }

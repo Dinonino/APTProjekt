@@ -23,3 +23,15 @@ C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Debug\TarProjekt.Predic
 C:\Users\MatejFilkovic\Desktop\tarProjekt\tarProjekt\obj\Debug\TarProjekt.LoadCorpusForm.resources
 C:\Users\Dino\Desktop\tarProjekt\tarProjekt\tarProjekt\obj\Debug\TarProjekt.LoadCorpusForm.resources
 C:\Users\Dino\Desktop\tarProjekt\tarProjekt\tarProjekt\obj\Debug\TarProjekt.PredictiveTyperForm.resources
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\bin\Debug\tarProjekt.exe.config
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\obj\Debug\tarProjekt.exe
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\obj\Debug\tarProjekt.pdb
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\bin\Debug\tarProjekt.exe
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\bin\Debug\tarProjekt.pdb
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\obj\Debug\tarProjekt.csprojResolveAssemblyReference.cache
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\obj\Debug\TarProjekt.LoadCorpusForm.resources
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\obj\Debug\TarProjekt.PredictiveTyperForm.resources
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\obj\Debug\TarProjekt.Properties.Resources.resources
+C:\Users\Dino\Desktop\tar\APTProjekt\tarProjekt\obj\Debug\tarProjekt.csproj.GenerateResource.Cache

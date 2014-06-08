@@ -18,6 +18,9 @@ namespace TarProjekt
     {
         private Dictionary<string, Word> nGrams;
 
+        public static string STARTWORD = "<start>";
+        public static string ENDWORD = "<end>";
+        
         private int totalNumberOfNGrams;
         private int totalNumberOfWords;
         private long totalNumberOfDiferentBigrams; //potrebno za Kneser Ney metodu
@@ -65,6 +68,14 @@ namespace TarProjekt
         {
             InputFormatter inputFormatter = new InputFormatter();
             List<List<string>> content = inputFormatter.FormatData(input);
+            foreach (List<string> sentence in content)
+            { 
+                for(int i = 0; i < LMOrder; i++)
+                {
+                    sentence.Insert(0, STARTWORD);
+                    sentence.Add(ENDWORD);
+                }
+            }
             createModel(content);
         }
         public List<string> evaluateModel()
@@ -119,6 +130,7 @@ namespace TarProjekt
                 }
 
             }
+            totalNumberOfWords -= 2;
             averageSentenceLength = (float)totalNumberOfWords / input.Count; 
             numberOfSentences = input.Count;
             WriteToFile();
@@ -178,6 +190,8 @@ namespace TarProjekt
                 elementAt.EvaluatedProbability = evaluatedProbability;
             }
             result = result.OrderByDescending(x => x.EvaluatedProbability).ToList();
+            if(result.Count > 1)
+                result.RemoveRange(0, 2);
             return result;
         }
         //Add one smooting
@@ -268,10 +282,7 @@ namespace TarProjekt
             }
 
         }
-        private void computePerplexityCrossEntropy(List<List <string>> testSentences)
-        {
-
-        }
+      
         private void WriteToFile()
         {
             StreamWriter file = new StreamWriter("./izlaz.txt");
@@ -341,5 +352,7 @@ namespace TarProjekt
             }
             file.Close();
         }
+
+
     }
 }

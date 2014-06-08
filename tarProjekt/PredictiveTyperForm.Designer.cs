@@ -48,6 +48,7 @@
             this.languageModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.smootingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.analysisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.crossentropyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadCorpusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,7 +65,6 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.listAddOne = new System.Windows.Forms.ListBox();
-            this.crossentropyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loadTestSetDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -181,7 +181,7 @@
             // fontToolStripMenuItem
             // 
             this.fontToolStripMenuItem.Name = "fontToolStripMenuItem";
-            this.fontToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.fontToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
             this.fontToolStripMenuItem.Text = "Font";
             this.fontToolStripMenuItem.Click += new System.EventHandler(this.fontToolStripMenuItem_Click);
             // 
@@ -223,6 +223,13 @@
             this.analysisToolStripMenuItem.Name = "analysisToolStripMenuItem";
             this.analysisToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.analysisToolStripMenuItem.Text = "Analysis";
+            // 
+            // crossentropyToolStripMenuItem
+            // 
+            this.crossentropyToolStripMenuItem.Name = "crossentropyToolStripMenuItem";
+            this.crossentropyToolStripMenuItem.Size = new System.Drawing.Size(149, 22);
+            this.crossentropyToolStripMenuItem.Text = "Cross-entropy";
+            this.crossentropyToolStripMenuItem.Click += new System.EventHandler(this.crossentropyToolStripMenuItem_Click);
             // 
             // loadCorpusToolStripMenuItem
             // 
@@ -321,13 +328,6 @@
             this.listAddOne.Name = "listAddOne";
             this.listAddOne.Size = new System.Drawing.Size(189, 95);
             this.listAddOne.TabIndex = 9;
-            // 
-            // crossentropyToolStripMenuItem
-            // 
-            this.crossentropyToolStripMenuItem.Name = "crossentropyToolStripMenuItem";
-            this.crossentropyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.crossentropyToolStripMenuItem.Text = "Cross-entropy";
-            this.crossentropyToolStripMenuItem.Click += new System.EventHandler(this.crossentropyToolStripMenuItem_Click);
             // 
             // loadTestSetDialog
             // 
